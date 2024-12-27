@@ -4,7 +4,7 @@ Multi-track audio mixer built around Wavesurfer. This is a modular version that 
 
 See `src/script.js` for usage.
 
-[^1]: 12/26/2024: I got the basic structure and most essential features in place because I just need it **mostly** functioning for a demo I'm putting together of another project. Once I get the demo in order, I'll probably revisit this side-project soon after to add more features. And yes, I know it can benefit from some better styling too.
+[^1]: **12/26/2024**: I got the basic structure and most essential features in place because I just need it *mostly* functioning for a demo I'm putting together of another project. Once I get the demo in order, I'll probably revisit this side-project soon after to add more features. And yes, I know it can benefit from some better styling too.
 
 ## Features
 
