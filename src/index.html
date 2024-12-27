@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Modularized Audio Mixer</title>
+    <link rel="stylesheet" href="mixer.css">
+
+    <style>
+        *,
+        *::before,
+        *::after {
+            box-sizing: inherit;
+        }
+
+        html {
+            box-sizing: border-box;
+            font-family: 'Open Sans', sans-serif;
+        }
+
+        body {
+            margin: 0;
+            width: 100dvw;
+            height: 100dvh;
+            display: grid;
+            place-items: center;
+        }
+
+        .test-container {
+            width: 80dvw;
+            height: 60dvh;
+        }
+    </style>
+</head>
+<body>
+    <div class="test-container"></div>
+
+    <script type="module" src="script.js"></script>
+</body>
+</html>

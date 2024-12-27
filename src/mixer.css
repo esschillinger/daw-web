@@ -1,0 +1,529 @@
+:root {
+    --color-red: rgb(208, 37, 37);
+    --color-green: rgb(78, 147, 122);
+}
+
+.icon-wrapper {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.8rem;
+    border-radius: 1rem;
+    font-family: inherit;
+    transition: background-color 150ms ease,
+                transform 150ms ease;
+}
+
+button.icon-wrapper {
+    cursor: pointer;
+    border: none;
+    background: none;
+}
+
+button.icon-wrapper::before {
+    content: '';
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    border-radius: inherit;
+    transition: 150ms ease;
+}
+
+button.icon-wrapper:hover::before {
+    background-color: rgb(from var(--_color-text, black) r g b / 0.05);
+}
+
+button.icon-wrapper:active:hover {
+    transform: scale(0.95);
+}
+
+button.icon-wrapper:has(i, div + span):active:hover {
+    transform: scale(0.98);
+}
+
+.icon-wrapper > .icon {
+    width: 1rem;
+    height: 1rem;
+    padding: 0;
+    cursor: inherit;
+}
+
+.icon-wrapper > i.icon {
+    --_icon-color: var(--_color-text, black);
+
+    mask-repeat: no-repeat;
+    mask-position: center;
+    border-color: transparent;
+    background-color: var(--_icon-color);
+    transition: background-color 250ms ease;
+}
+
+.icon-wrapper > span.icon__description {
+    font-size: 0.9rem;
+}
+
+/* thanks fontawesome */
+
+.icon__gear {
+    mask-image: url("./icons/gear-solid.svg");
+}
+
+.icon__play {
+    mask-image: url("./icons/play-solid.svg");
+}
+
+.icon__check {
+    mask-image: url("./icons/check-solid.svg");
+}
+
+.icon__xmark {
+    mask-image: url("./icons/xmark-solid.svg");
+}
+
+.icon__zoom-in {
+    mask-image: url("./icons/magnifying-glass-plus-solid.svg");
+}
+
+.icon__zoom-out {
+    mask-image: url("./icons/magnifying-glass-minus-solid.svg");
+}
+
+.icon__left-chevron {
+    mask-image: url("./icons/chevron-left-solid.svg");
+}
+
+.icon__right-chevron {
+    mask-image: url("./icons/chevron-right-solid.svg");
+}
+
+.mixer {
+    /* duration in seconds (for now) */
+    --_duration: 20;
+    --_timeline-width: 100px;
+    --_timeline-space-duration: 1;
+    --_track-width: calc(var(--_duration) * var(--_timeline-width) / var(--_timeline-space-duration));
+    --_bg-color: hsl(0, 0%, 50%);
+    --_accent-color: #ffd2a7;
+
+    isolation: isolate;
+    position: relative;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    padding: 1rem;
+    background: var(--_bg-color);
+    border-radius: 0.5rem;
+    overflow: hidden;
+    box-shadow: 0px 2px 10px 2px rgba(0, 0, 0, 0.5);
+}
+
+.mixer[data-state="loading"] {
+    &::before {
+        content: '';
+        z-index: 10;
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        border-radius: inherit;
+        backdrop-filter: blur(5px) saturate(180%);
+    }
+}
+
+.mixer > #phantom-audio {
+    display: none;
+}
+
+.mixer > .mixer__toolbar {
+    display: flex;
+    justify-content: end;
+    align-items: center;
+    gap: 1rem;
+
+    & .action-group {
+        display: flex;
+    }
+
+    & .icon-wrapper {
+        padding: 0.5rem;
+        border-radius: 0.5rem;
+    }
+
+    & button.icon-wrapper:has(.icon__check) {
+        background: var(--color-green);
+    }
+
+    & button.icon-wrapper:has(.icon__xmark) {
+        background: var(--color-red);
+    }
+
+    & span {
+        line-height: 1;
+    }
+}
+
+.mixer:not(:has(.crop-tool[data-state="active"])) button.icon-wrapper:has(.icon__check, .icon__xmark) {
+    display: none;
+}
+
+.mixer > .main-wrapper {
+    overflow: hidden;
+    /* padding-inline: 1rem; */
+    
+    & .scroll-wrapper {
+        position: relative;
+        width: 100%;
+        height: 100%;
+        overflow: scroll;
+        overscroll-behavior: contain;
+    }
+}
+
+.mixer .slider {
+    --_slider-width: 2px;
+    --_handle-width: 20px;
+    --_handle-height: calc(var(--_handle-width) / 2);
+    --_handle-color: var(--_accent-color);
+
+    z-index: 5;
+    position: absolute;
+    top: 0;
+    /* can use percentages/relative values when .slider is a child of .track-list  */
+    /* must use absolute values when .slider is a direct child of scroll-wrapper  */
+    /* left: 1400px; */
+    width: var(--_slider-width);
+    height: 100%;
+    background: var(--_handle-color);
+
+    &::before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        width: var(--_handle-width);
+        height: var(--_handle-height);
+        transform: translateX(calc(-50% + (var(--_slider-width) / 2)));
+        background: var(--_handle-color);
+    }
+
+    &::after {
+        content: '';
+        position: absolute;
+        inset: 0;
+        width: calc(var(--_handle-width) / sqrt(2));
+        height: calc(var(--_handle-width) / sqrt(2));
+        transform:
+            translate(
+                calc(-50% + (var(--_slider-width) / 2)),
+                calc(var(--_handle-height) - (var(--_handle-height) / sqrt(2)))
+            )
+            rotate(45deg);
+        background: var(--_handle-color);
+    }
+}
+
+.mixer .timeline-wrapper {
+    --_tl-color-soft: hsl(from var(--_bg-color) h s calc(l * 1.1));
+    --_tl-color-medium: hsl(from var(--_bg-color) h s calc(l * 1.5));
+    --_tl-color-heavy: hsl(from var(--_bg-color) h s calc(l * 2));
+
+    /* use z-index: 4 to cover .crop-tool and canvas elements in shadow DOM (they must use z-index: 2 or something) */
+    z-index: 4;
+    position: sticky;
+    top: 0;
+    background: var(--_bg-color);
+    /* border-bottom: 5px solid yellow; */
+    width: var(--_track-width);
+    border-bottom: 5px solid var(--_accent-color);
+
+    & .timeline {
+        --_timeline-std-height: 20px;
+        display: grid;
+        grid-template-rows: calc(var(--_timeline-std-height) * 1.5 + 1rem);
+        grid-template-columns: repeat(var(--_duration), var(--_timeline-width));
+        grid-auto-flow: column;
+    }
+
+    & .timeline > * {
+        align-self: end;
+    }
+
+    & .timeline > *:not(:nth-child(5n)) {
+        height: var(--_timeline-std-height);
+        border-left: 1px solid var(--_tl-color-soft);
+        border-right: 1px solid var(--_tl-color-soft);
+    }
+
+    & .timeline > *:nth-child(5n) {
+        position: relative;
+        height: calc(var(--_timeline-std-height) * 1.5);
+        border-right: 2px solid var(--_tl-color-medium);
+    }
+
+    & .timeline > *:nth-child(5n)::before {
+        content: attr(data-value);
+        position: absolute;
+        top: 0;
+        right: 0;
+        transform: translate(50%, -100%);
+        line-height: 1;
+        color: var(--_tl-color-heavy);
+    }
+}
+
+.mixer .track-list {
+    --_track-count: 15;
+    --_track-height: 4rem;
+    position: relative; /* make the track list the containing block for the slider  */
+    display: flex;
+    flex-direction: column;
+    gap: calc(var(--_track-height) * 0.1);
+    padding-bottom: 1rem;
+    width: var(--_track-width);
+
+    & .track {
+        flex-shrink: 0;
+        height: var(--_track-height);
+        background: hsl(from var(--_bg-color) h s calc(l * 0.8));
+    }
+}
+
+.mixer .track .audio-wrapper {
+    --_audio-width: 0px;
+    /* need to define --_color, but overwrite with inline style */
+    --_color: var(--color-purple);
+    --_color-lighter: hsl(from var(--_color) h s calc(l * 1.25));
+    --_color-darker: hsl(from var(--_color) h s calc(l * 0.5));
+
+    /* inset custom properties bound the audio that is to be played (inside of frame); NOT the element positions */
+    --_left: 0px;
+    --_right: var(--_audio-width);
+
+    position: relative;
+    /* isolation: isolate; */
+    width: var(--_audio-width);
+    height: 100%;
+    color: var(--_color-lighter);
+    background-color: var(--_color-darker);
+    cursor: context-menu;
+    /* border-radius: 1ch; */
+    
+    &.cropped:has(.crop-tool[data-state="inactive"]) {
+        clip-path: polygon(
+            var(--_left) 0%,
+            var(--_left) 100%,
+            var(--_right) 100%,
+            var(--_right) 0%
+        );
+
+        &::before {
+            left: var(--_left);
+            width: calc(var(--_right) - var(--_left));
+        }
+    }
+
+    &::before {
+        content: attr(data-file);
+        position: absolute;
+        inset: 0;
+        height: fit-content;
+        font-size: 0.8rem;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        padding-inline: 1ch;
+        color: var(--_color-darker);
+        background: var(--_color-lighter);
+    }
+
+    /* probably redundant, I'm using cursorWidth: 0 in the JS */
+    &::part(cursor) {
+        display: none;
+    }
+
+    &[data-muted="true"]::after {
+        content: '';
+        /* z-index: 2; */
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.5);
+        backdrop-filter: saturate(70%);
+        /* border-bottom-left-radius: inherit;
+        border-bottom-right-radius: inherit; */
+    }
+
+    & .crop-tool {
+        --_bar-width: 30px;
+        --_border-width: calc(var(--_bar-width) / 6);
+        --_crop-color: yellow;
+
+        --_top: var(--_border-width);
+        --_bottom: calc(var(--_track-height) - var(--_border-width));
+        --_crop-left-overflow: 0px;
+        --_crop-right-overflow: 0px;
+
+        z-index: 3;
+        position: absolute;
+        top: 0;
+        left: calc(-1 * var(--_bar-width));
+        width: calc(var(--_audio-width) + (2 * var(--_bar-width)));
+        height: 100%;
+        background: rgba(0, 0, 0, 0.4);
+        /* create a frame, adjust private custom attributes above in JS with mousemove */
+        /* adjust left and right to account for the fact that .crop-tool is shifted --_bar-width to the left so the window is offset */
+        /* clip-path: polygon(
+            0% 0%,
+            0% 100%,
+            calc(var(--_left) + var(--_bar-width)) 100%,
+            calc(var(--_left) + var(--_bar-width)) var(--_top),
+            calc(var(--_right) + var(--_bar-width)) var(--_top),
+            calc(var(--_right) + var(--_bar-width)) var(--_bottom),
+            calc(var(--_left) + var(--_bar-width)) var(--_bottom),
+            calc(var(--_left) + var(--_bar-width)) 100%,
+            100% 100%,
+            100% 0%
+        ); */
+
+        clip-path: polygon(
+            var(--_crop-left-overflow) 0%,
+            var(--_crop-left-overflow) 100%,
+            calc(var(--_left) + var(--_bar-width)) 100%,
+            calc(var(--_left) + var(--_bar-width)) var(--_top),
+            calc(var(--_right) + var(--_bar-width)) var(--_top),
+            calc(var(--_right) + var(--_bar-width)) var(--_bottom),
+            calc(var(--_left) + var(--_bar-width)) var(--_bottom),
+            calc(var(--_left) + var(--_bar-width)) 100%,
+            calc(var(--_audio-width) + 2 * var(--_bar-width) - var(--_crop-right-overflow)) 100%,
+            calc(var(--_audio-width) + 2 * var(--_bar-width) - var(--_crop-right-overflow)) 0%
+        );
+
+        /* transform: translateX(calc(-1 * var(--_bar-width))); */
+    }
+
+    & .crop-tool[data-state="inactive"] {
+        display: none;
+    }
+
+    & .crop__left-handle,
+    .crop__right-handle {
+        display: grid;
+        place-items: center;
+        position: absolute;
+        inset: 0;
+        width: var(--_bar-width);
+        height: 100%;
+        background: var(--_crop-color);
+        border: none;
+        border-radius: 5px;
+        cursor: ew-resize;
+        /* cursor: pointer; */
+
+        &:active:hover {
+            transform: none;
+        }
+    }
+    
+    & .crop__left-handle {
+        left: var(--_left);
+        border-top-right-radius: 0;
+        border-bottom-right-radius: 0;
+    }
+    
+    & .crop__right-handle {
+        left: calc(var(--_right) + var(--_bar-width));
+        border-top-left-radius: 0;
+        border-bottom-left-radius: 0;
+    }
+
+    & .crop-tool i {
+        width: 20px;
+        height: 20px;
+    }
+
+    & .crop__top-border,
+    .crop__bottom-border {
+        position: absolute;
+        inset: 0;
+        left: calc(var(--_left) + var(--_bar-width));
+        width: calc(var(--_right) - var(--_left));
+        height: var(--_border-width);
+        background: var(--_crop-color);
+    }
+
+    & .crop__top-border {
+        bottom: var(--_top);
+    }
+
+    & .crop__bottom-border {
+        /* i have no idea why bottom: 0 isn't working */
+        top: var(--_bottom);
+        /* top: revert; */
+    }
+}
+
+.mixer > .controls {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+
+    & .time-controls {
+        flex-grow: 1;
+        accent-color: var(--_accent-color);
+    }
+}
+
+#audio-controls {
+    --_bg-color: white;
+    --_accent-color: var(--color-purple);
+    /* use inline style to set --_accent-color to the audio color */
+
+    z-index: 1000;
+    position: fixed;
+    padding: 0.75ch;
+    background-color: var(--_bg-color);
+    border-color: hsl(from var(--_bg-color) h s calc(l * 0.75));
+    border-radius: 0.375ch;
+    box-shadow: 0px 2px 10px 1px rgba(0, 0, 0, 0.5);
+
+    &[data-state="hidden"] {
+        display: none;
+    }
+}
+
+#audio-controls .control {
+    display: flex;
+    gap: 0.5ch;
+    border-radius: 0.25ch;
+
+    &:not(:has(input[type="range"], button:disabled)):hover {
+        background-color: hsl(from var(--_bg-color) h s calc(l * 0.925));
+    }
+
+    &:not(:last-child) {
+        border-bottom: 1px solid hsl(from var(--_bg-color) h s calc(l * 0.75));
+    }
+}
+
+#audio-controls button {
+    font-family: inherit;
+    width: 100%;
+    height: 100%;
+    padding: 1ch;
+    background: none;
+    border: none;
+    text-align: left;
+
+    &:not(:disabled) {
+        cursor: pointer;
+    }
+}
+
+#audio-controls input[type="range"] {
+    accent-color: var(--_accent-color);
+}
