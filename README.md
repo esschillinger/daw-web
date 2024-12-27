@@ -2,6 +2,8 @@
 
 Multi-track audio mixer built around Wavesurfer. This is a modular version that I intend to continue updating and improving upon; for now, only core features have been implemented.[^1]
 
+I am also aware that Wavesurfer has their own super-plugin for this exact purpose, which I discovered after almost finishing the base component. To the best of my knowledge, their multi-track mixer doesn't have the ability to crop audio, so my effort was (hopefully) not wasted!
+
 See `src/script.js` for usage.
 
 [^1]: **12/26/2024**: I got the basic structure and most essential features in place because I just need it *mostly* functioning for a demo I'm putting together of another project. Once I get the demo in order, I'll probably revisit this side-project soon after to add more features. And yes, I know it can benefit from some better styling too.
