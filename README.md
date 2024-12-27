@@ -28,7 +28,7 @@ Removes any crops applied to an audio file.
 
 ### Track zoom
 
-Click the zoom icons in the top right of the mixer or hover over the tracks and press `CTRL + scroll` to zoom in or out of the tracks. Allows for more fine control over cropping and track placement.
+Click the zoom icons in the top right of the mixer or hover over the tracks and press/hold `CTRL + mousewheel[up | down]` to zoom in or out of the tracks. Allows for more fine control over cropping and track placement.
 
 ### Volume[^2]
 
