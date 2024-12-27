@@ -172,8 +172,8 @@ button.icon-wrapper:has(i, div + span):active:hover {
 }
 
 .mixer > .main-wrapper {
+    flex-grow: 1;
     overflow: hidden;
-    /* padding-inline: 1rem; */
     
     & .scroll-wrapper {
         position: relative;

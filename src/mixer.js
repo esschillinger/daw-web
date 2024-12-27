@@ -12,6 +12,17 @@ export default class Mixer {
         timelineGridMax : 100
     };
 
+    // audio waveform: [-->>---|--->>->->>>---|----]
+    //                ref    start           end
+    #default_audio_options = {
+        delay: 0, // delay from start of track, ms
+        start: 0, // left audio crop point relative to the start of the audio file, ms (see poor waveform sketch above)
+        end: -1, // right crop point relative to the start of the audio file, ms (see poor waveform sketch above). NOTE: the only negative value allowed is -1
+        volume: 1, // audio volume on the interval [0, 1]
+        muted: false, // pretty self-explanatory
+        color: "hsl(207, 90%, 54%)" // default audio color base, str; can use any color function, not just hsl()
+    }
+
     // element references
     #mixer;
     #scroll_container;
@@ -38,12 +49,16 @@ export default class Mixer {
     #audio_counter = 0;
     #loading_wavesurfers = 0; // semaphore
 
-    // temporary variables to scope audio changes locally
+    // playback management
     #demo_playing = false;
+
+    // crop clip path and control management
+    #crop_bar_width = 30;
+
+    // temporary variables to scope audio changes locally
     #dragging_audio;
     #cropping_audio;
     #initial_audio_left;
-    #crop_bar_width = 30;
     #initial_crop_bar_left;
 
 
@@ -273,6 +288,8 @@ export default class Mixer {
     }
 
     add_track(options) {
+        const audio_settings = {...this.#default_audio_options, ...options};
+
         this.#loading_wavesurfers++;
         this.#mixer.dataset.state = "loading";
 
@@ -281,9 +298,9 @@ export default class Mixer {
 
         const audio_wrapper = document.createElement("div");
         audio_wrapper.classList.add("audio-wrapper");
-        audio_wrapper.style.setProperty("--_color", options.color);
+        audio_wrapper.style.setProperty("--_color", audio_settings.color);
         audio_wrapper.dataset.id = this.#audio_counter++;
-        audio_wrapper.dataset.file = options.file; // perhaps options.file.split("/")[-1] to isolate file name
+        audio_wrapper.dataset.file = audio_settings.file; // perhaps audio_settings.file.split("/")[-1] to isolate file name
         audio_wrapper.classContext = this;
 
         const crop_tool = document.createElement("div");
@@ -327,21 +344,21 @@ export default class Mixer {
         let wavesurfer = WaveSurfer.create({
             container : audio_wrapper,
             height : height,
-            waveColor : `hsl(from ${options.color} h s calc(l * 1.25))`,
-            progressColor : options.color, // var(--_color)
+            waveColor : `hsl(from ${audio_settings.color} h s calc(l * 1.25))`,
+            progressColor : audio_settings.color, // var(--_color)
             cursorWidth : 0,
-            url : options.file,
+            url : audio_settings.file,
             backend: 'MediaElement'
         });
 
         let wavesurfer_map = new Map();
         wavesurfer_map.set("wavesurfer", wavesurfer); // wavesurfer object with waveform
-        wavesurfer_map.set("delay", 0); // plays at the start of the demo
-        wavesurfer_map.set("start", 0); // start of audio (nonzero only if cropped)
-        wavesurfer_map.set("end", -1); // end of audio (!= -1 only if cropped)
-        wavesurfer_map.set("volume", 1); // [0, 1], same as <audio> element
-        wavesurfer_map.set("muted", false); // pretty self-explanatory
-        wavesurfer_map.set("color", options.color);
+        wavesurfer_map.set("delay", audio_settings.delay); // plays at the start of the demo
+        wavesurfer_map.set("start", audio_settings.start); // start of audio (nonzero only if cropped)
+        wavesurfer_map.set("end", audio_settings.end); // end of audio (!= -1 only if cropped)
+        wavesurfer_map.set("volume", audio_settings.volume); // [0, 1], same as <audio> element
+        wavesurfer_map.set("muted", audio_settings.muted); // pretty self-explanatory
+        wavesurfer_map.set("color", audio_settings.color);
 
         this.#audio_map.set(audio_wrapper.dataset.id, wavesurfer_map);
 
@@ -351,12 +368,28 @@ export default class Mixer {
             const audio_width = ratio * track_width;
 
             audio_wrapper.style.setProperty("--_audio-width", `${audio_width}px`);
+            audio_wrapper.style.left = `${track_width * audio_settings.delay / 1000 / this.#attributes.duration}px`;
 
-            const left = wavesurfer_map.get("start") / wavesurfer.getDuration() * audio_width;
-            const right = wavesurfer_map.get("end") == -1 ? audio_width : wavesurfer_map.get("end") / wavesurfer.getDuration() * audio_width;
+            let cropped = false;
+
+            if (audio_settings.start != 0) cropped = true;
+
+            const left = wavesurfer_map.get("start") / 1000 / wavesurfer.getDuration() * audio_width;
+            let right;
+
+            if (audio_settings.end != -1) {
+                cropped = true;
+                right = audio_settings.end / 1000 / wavesurfer.getDuration() * audio_width;
+            } else {
+                right = audio_width;
+            }
 
             audio_wrapper.style.setProperty("--_left", `${left}px`);
             audio_wrapper.style.setProperty("--_right", `${right}px`);
+
+            if (cropped) audio_wrapper.classList.add("cropped");
+
+            audio_wrapper.dataset.muted = audio_settings.muted;
 
             this.#loading_wavesurfers--;
             if (this.#loading_wavesurfers == 0) this.#mixer.dataset.state = "ready";
