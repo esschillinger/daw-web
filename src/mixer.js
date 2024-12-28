@@ -360,6 +360,8 @@ export default class Mixer {
         wavesurfer_map.set("muted", audio_settings.muted); // pretty self-explanatory
         wavesurfer_map.set("color", audio_settings.color);
 
+        wavesurfer.setVolume(audio_settings.volume);
+
         this.#audio_map.set(audio_wrapper.dataset.id, wavesurfer_map);
 
         wavesurfer.on("ready", () => {
