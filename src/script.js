@@ -7,7 +7,7 @@ const mixer = new Mixer({
 
 document.getElementById("export").addEventListener("click", () => {
     const data = mixer.export_tracks();
-    
+
     console.log(data);
 })
 
@@ -26,7 +26,7 @@ audio_ids.push(
     mixer.add_track({
         file: "./audio/test_audio.ogg",
         color: "hsl(266, 100%, 64%)",
-        delay: 1000,
+        position: 1000,
         muted: true
     })
 );
@@ -36,7 +36,7 @@ audio_ids.push(
     mixer.add_track({
         file: "./audio/test_audio.ogg",
         color: "rgb(208, 37, 37)",
-        delay: 7000,
+        position: 7000,
         start: 2000,
         volume: 0.5
     })
@@ -47,7 +47,7 @@ audio_ids.push(
     mixer.add_track({
         file: "./audio/test_audio.ogg",
         color: "#32a952",
-        delay: -2500,
+        position: 0,
         start: 2500,
         end: 3500
     })
@@ -58,7 +58,7 @@ audio_ids.push(
     mixer.add_track({
         file: "./audio/test_audio.ogg",
         color: "#fd8c73",
-        delay: 2500,
+        position: 2500,
         end: 4000
     })
 );

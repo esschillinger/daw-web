@@ -15,7 +15,8 @@ export default class Mixer {
     // audio waveform: [-->>---|--->>->->>>---|----]
     //                ref    start           end
     #default_audio_options = {
-        delay: 0, // delay from start of track, ms
+        position: 0, // displacement between "start" and the beginning of the track, ms
+        delay: 0, // displacement between "start" and the slider position on 'play', ms; effectively only useful internally
         start: 0, // left audio crop point relative to the start of the audio file, ms (see poor waveform sketch above)
         end: -1, // right crop point relative to the start of the audio file, ms (see poor waveform sketch above). NOTE: the only negative value allowed is -1
         volume: 1, // audio volume on the interval [0, 1]
@@ -352,13 +353,14 @@ export default class Mixer {
         });
 
         let wavesurfer_map = new Map();
-        wavesurfer_map.set("filepath", audio_settings.file); // pretty self-explanatory
-        wavesurfer_map.set("wavesurfer", wavesurfer); // wavesurfer object with waveform
-        wavesurfer_map.set("delay", audio_settings.delay); // delay to begin playing audio, RELATIVE TO THE SLIDER POSITION ON 'PLAY'; pretty much only useful internally
-        wavesurfer_map.set("start", audio_settings.start); // start of audio (nonzero only if cropped)
-        wavesurfer_map.set("end", audio_settings.end); // end of audio (!= -1 only if cropped)
-        wavesurfer_map.set("volume", audio_settings.volume); // [0, 1], same as <audio> element
-        wavesurfer_map.set("muted", audio_settings.muted); // pretty self-explanatory
+        wavesurfer_map.set("filepath", audio_settings.file);
+        wavesurfer_map.set("wavesurfer", wavesurfer);
+        wavesurfer_map.set("position", audio_settings.position);
+        wavesurfer_map.set("delay", audio_settings.delay);
+        wavesurfer_map.set("start", audio_settings.start);
+        wavesurfer_map.set("end", audio_settings.end);
+        wavesurfer_map.set("volume", audio_settings.volume);
+        wavesurfer_map.set("muted", audio_settings.muted);
         wavesurfer_map.set("color", audio_settings.color);
 
         wavesurfer.setVolume(audio_settings.volume);
@@ -371,7 +373,7 @@ export default class Mixer {
             const audio_width = ratio * track_width;
 
             audio_wrapper.style.setProperty("--_audio-width", `${audio_width}px`);
-            audio_wrapper.style.left = `${track_width * audio_settings.delay / 1000 / this.#attributes.duration}px`;
+            audio_wrapper.style.left = `${track_width * ((audio_settings.position - audio_settings.start) / 1000) / this.#attributes.duration}px`;
 
             let cropped = false;
 
@@ -954,8 +956,8 @@ export default class Mixer {
             
                     // scroll with the slider as it's about to leave the view
                     const scroll_width = _this.#scroll_container.getBoundingClientRect().width;
-                    if (slider_position > (_this.#scroll_container.scrollLeft + (0.9 * scroll_width))) {
-                        _this.#scroll_container.scrollLeft = slider_position - (0.1 * scroll_width);
+                    if (slider_position > (_this.#scroll_container.scrollLeft + (0.8 * scroll_width))) {
+                        _this.#scroll_container.scrollLeft = slider_position - (0.2 * scroll_width);
                     }
             
                     if (!_this.#demo_playing) {
