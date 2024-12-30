@@ -468,6 +468,13 @@ export default class Mixer {
     #prevent_audio_move() {
         const _this = this.classContext;
         if (_this.#dragging_audio) {
+            const audio_id = _this.#dragging_audio.dataset.id;
+
+            let position = parseInt(_this.#dragging_audio.style.left) / _this.#track_list.getBoundingClientRect().width * _this.#attributes.duration * 1000;
+            position += _this.#audio_map.get(audio_id).get("start");
+
+            _this.#audio_map.get(audio_id).set("position", position);
+
             _this.#dragging_audio = null;
             _this.#initial_audio_left = null;
             
@@ -908,7 +915,7 @@ export default class Mixer {
     
             // play audio outside of the config/preprocess forEach because setTime() takes a nonnegligible length of time to complete, even for small audio file sets
             // goal: reduce synchronization issues between audio progress relative to other files
-            // okay turns out the main problem is the audio drivers going to sleep but this still makes sense to do
+            // okay turns out the main problem was the audio drivers going to sleep but this still makes sense to do
             let timeouts = [];
             let _this = this;
     

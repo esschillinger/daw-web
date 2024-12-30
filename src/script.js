@@ -32,7 +32,7 @@ audio_ids.push(
 );
 
 audio_ids.push(
-    // first 2s of audio is cropped, plays 7s + 2s into the mix at half volume
+    // first 2s of audio is cropped, plays 7s into the mix at half volume
     mixer.add_track({
         file: "./audio/test_audio.ogg",
         color: "rgb(208, 37, 37)",
@@ -43,7 +43,7 @@ audio_ids.push(
 );
 
 audio_ids.push(
-    // negative delay to match left crop to track start
+    // set left-cropped audio to play at the beginning of the track
     mixer.add_track({
         file: "./audio/test_audio.ogg",
         color: "#32a952",
@@ -59,6 +59,7 @@ audio_ids.push(
         file: "./audio/test_audio.ogg",
         color: "#fd8c73",
         position: 2500,
+        start: 2500,
         end: 4000
     })
 );
