@@ -162,9 +162,10 @@ button.icon-wrapper:has(i, div + span):active:hover {
         display: flex;
     }
 
-    & .icon-wrapper {
+    & button.icon-wrapper {
         padding: 0.5rem;
         border-radius: 0.5rem;
+        color: inherit;
     }
 
     & button.icon-wrapper:has(.icon__check) {
@@ -172,7 +173,7 @@ button.icon-wrapper:has(i, div + span):active:hover {
     }
 
     & button.icon-wrapper:has(.icon__xmark) {
-        background: var(--color-red);
+        background: hsl(from var(--color-red) h s calc(l * 0.8));
     }
 
     & span {
@@ -265,11 +266,20 @@ button.icon-wrapper:has(i, div + span):active:hover {
     & .timeline > * {
         align-self: end;
     }
-
+    
     & .timeline > *:not(:nth-child(5n)) {
         height: var(--_timeline-std-height);
-        border-left: 1px solid var(--_tl-color-soft);
         border-right: 1px solid var(--_tl-color-soft);
+    }
+    
+    & .timeline > *:first-child {
+        height: calc(var(--_timeline-std-height) * 1.5);
+        border-left: 2px solid var(--_text-color);
+        border-right: none;
+    }
+
+    & .timeline > *:nth-child(2) {
+        border-left: 1px solid var(--_tl-color-soft);
     }
 
     & .timeline > *:nth-child(5n) {
