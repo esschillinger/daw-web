@@ -1,6 +1,6 @@
-# audio-mixer
+# daw-web
 
-Multi-track audio mixer built around Wavesurfer. This is a modular version that I intend to continue updating and improving upon; for now, only core features have been implemented.[^1]
+Basic web-based DAW built around Wavesurfer. This is a modular version that I intend to continue updating and improving upon; for now, only core features have been implemented.[^1]
 
 I am also aware that Wavesurfer has their own super-plugin for this exact purpose, which I discovered after almost finishing the base component. To the best of my knowledge, their multi-track mixer doesn't have the ability to crop audio, so my effort was (hopefully) not wasted!
 
