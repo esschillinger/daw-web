@@ -39,4 +39,4 @@ Adjust the slider in the context menu to set the playback volume for a given aud
 I intend to eventually extend the Wavesurfer functionality which allows for varying volume levels within an audio file.
 
 
-[^2]: This feature is accessible from the context menu, which is displayed by right-clicking on an audio file.
+[^2]: These features are accessible from the context menu, which is displayed by right-clicking on an audio file.
