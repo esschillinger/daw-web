@@ -76,6 +76,10 @@ button.icon-wrapper:has(i, div + span):active:hover {
     mask-image: url("./icons/play-solid.svg");
 }
 
+.icon__pause {
+    mask-image: url("./icons/pause-solid.svg");
+}
+
 .icon__check {
     mask-image: url("./icons/check-solid.svg");
 }
@@ -171,7 +175,7 @@ button.icon-wrapper:has(i, div + span):active:hover {
     display: none;
 }
 
-.mixer > .main-wrapper {
+.mixer > .mixer__main-wrapper {
     flex-grow: 1;
     overflow: hidden;
     

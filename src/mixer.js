@@ -214,7 +214,7 @@ export default class Mixer {
 
 
         let main_wrapper = document.createElement("div");
-        main_wrapper.classList.add("main-wrapper");
+        main_wrapper.classList.add("mixer__main-wrapper");
 
         this.#scroll_container = document.createElement("div");
         this.#scroll_container.classList.add("scroll-wrapper");
@@ -352,8 +352,9 @@ export default class Mixer {
         });
 
         let wavesurfer_map = new Map();
+        wavesurfer_map.set("filepath", audio_settings.file); // pretty self-explanatory
         wavesurfer_map.set("wavesurfer", wavesurfer); // wavesurfer object with waveform
-        wavesurfer_map.set("delay", audio_settings.delay); // plays at the start of the demo
+        wavesurfer_map.set("delay", audio_settings.delay); // delay to begin playing audio, RELATIVE TO THE SLIDER POSITION ON 'PLAY'; pretty much only useful internally
         wavesurfer_map.set("start", audio_settings.start); // start of audio (nonzero only if cropped)
         wavesurfer_map.set("end", audio_settings.end); // end of audio (!= -1 only if cropped)
         wavesurfer_map.set("volume", audio_settings.volume); // [0, 1], same as <audio> element
@@ -407,6 +408,12 @@ export default class Mixer {
         });
 
         this.#slider.style.height = `${this.#track_list.getBoundingClientRect().height + this.#timeline.getBoundingClientRect().height}px`;
+
+        return audio_wrapper.dataset.id; // return the locally-scoped ID assigned to the audio
+    }
+
+    export_tracks() {
+        return this.#audio_map;
     }
 
     #get_custom_property(property, styles) {
@@ -665,6 +672,7 @@ export default class Mixer {
         this.#scroll_container.addEventListener("mousedown", (e) => {
             e.preventDefault();
             this.#demo_playing = false;
+            this.#play_button.firstChild.classList.remove("icon__pause");
 
             const container_rect = this.#scroll_container.getBoundingClientRect();
             const left_margin = container_rect.left;
@@ -843,7 +851,15 @@ export default class Mixer {
         });
     
         this.#play_button.addEventListener("click", () => {
+            if (this.#demo_playing) {
+                this.#demo_playing = false;
+                this.#play_button.firstChild.classList.remove("icon__pause");
+
+                return;
+            }
+
             this.#demo_playing = true;
+            this.#play_button.firstChild.classList.add("icon__pause");
             
             let track_width = parseInt(this.#track_list.getBoundingClientRect().width);
             let slider_position = this.#slider.style.left === "" ? 0 : parseInt(this.#slider.style.left);
@@ -964,6 +980,7 @@ export default class Mixer {
                     } else {
                         // demo reached "EOF"
                         _this.#demo_playing = false;
+                        _this.#play_button.firstChild.classList.remove("icon__pause");
                         _this.#slider.style.left = `${track_width}px`;
             
                         _this.#phantom_audio.pause();
