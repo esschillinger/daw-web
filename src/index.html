@@ -32,7 +32,12 @@
             height: 60dvh;
         }
 
-        button#export {
+        .mixer-controls {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .mixer-controls > button {
             font-family: inherit;
             padding: 2ch;
             cursor: pointer;
@@ -43,7 +48,10 @@
 <body>
     <div class="test-container"></div>
 
-    <button id="export">View track data (console log)</button>
+    <div class="mixer-controls">
+        <button id="export">View track data (console log)</button>
+        <button id="delete">Delete track</button>
+    </div>
 
     <script type="module" src="script.js"></script>
 </body>

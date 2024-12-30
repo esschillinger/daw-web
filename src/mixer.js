@@ -414,6 +414,18 @@ export default class Mixer {
         return audio_wrapper.dataset.id; // return the locally-scoped ID assigned to the audio
     }
 
+    delete_track(audio_id) {
+        const data = this.#audio_map.get(audio_id);
+        const track = this.#track_list.querySelector(`.track:has(.audio-wrapper[data-id="${audio_id}"])`);
+
+        this.#audio_map.delete(audio_id);
+        this.#track_list.removeChild(track);
+
+        this.#slider.style.height = `${this.#track_list.getBoundingClientRect().height + this.#timeline.getBoundingClientRect().height}px`;
+
+        return data;
+    }
+
     export_tracks() {
         return this.#audio_map;
     }

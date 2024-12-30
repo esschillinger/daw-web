@@ -132,7 +132,7 @@ button.icon-wrapper:has(i, div + span):active:hover {
     color: var(--_text-color);
 
     & button.icon-wrapper > i.icon {
-        --_icon-color: #f7f4f2;
+        --_icon-color: var(--_text-color);
     }
 }
 

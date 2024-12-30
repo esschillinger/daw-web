@@ -11,6 +11,13 @@ document.getElementById("export").addEventListener("click", () => {
     console.log(data);
 })
 
+document.getElementById("delete").addEventListener("click", () => {
+    const audio_id = prompt("Enter ID of track to be deleted:");
+    const data = mixer.delete_track(audio_id);
+
+    console.log(data);
+});
+
 let audio_ids = [];
 
 
