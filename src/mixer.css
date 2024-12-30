@@ -53,7 +53,7 @@ button.icon-wrapper:has(i, div + span):active:hover {
 }
 
 .icon-wrapper > i.icon {
-    --_icon-color: var(--_color-text, black);
+    --_icon-color: var(--color-text, black);
 
     mask-repeat: no-repeat;
     mask-position: center;
@@ -110,8 +110,12 @@ button.icon-wrapper:has(i, div + span):active:hover {
     --_timeline-width: 100px;
     --_timeline-space-duration: 1;
     --_track-width: calc(var(--_duration) * var(--_timeline-width) / var(--_timeline-space-duration));
-    --_bg-color: hsl(0, 0%, 50%);
-    --_accent-color: #ffd2a7;
+    --_bg-color: #1d1b1a;
+    --_bg-secondary-color: #4a4948;
+    --_text-color: #f7f4f2;
+    --_accent-color: #78a9ed;
+    /* --_accent-color: #ffd2a7; */
+    --_icon-color: var(--_text-color) !important;
 
     isolation: isolate;
     position: relative;
@@ -125,6 +129,11 @@ button.icon-wrapper:has(i, div + span):active:hover {
     border-radius: 0.5rem;
     overflow: hidden;
     box-shadow: 0px 2px 10px 2px rgba(0, 0, 0, 0.5);
+    color: var(--_text-color);
+
+    & button.icon-wrapper > i.icon {
+        --_icon-color: #f7f4f2;
+    }
 }
 
 .mixer[data-state="loading"] {
@@ -178,6 +187,9 @@ button.icon-wrapper:has(i, div + span):active:hover {
 .mixer > .mixer__main-wrapper {
     flex-grow: 1;
     overflow: hidden;
+    padding-block: 1rem;
+    border-top: 1px solid var(--_bg-secondary-color);
+    border-bottom: 1px solid var(--_bg-secondary-color);
     
     & .scroll-wrapper {
         position: relative;
@@ -231,9 +243,7 @@ button.icon-wrapper:has(i, div + span):active:hover {
 }
 
 .mixer .timeline-wrapper {
-    --_tl-color-soft: hsl(from var(--_bg-color) h s calc(l * 1.1));
-    --_tl-color-medium: hsl(from var(--_bg-color) h s calc(l * 1.5));
-    --_tl-color-heavy: hsl(from var(--_bg-color) h s calc(l * 2));
+    --_tl-color-soft: hsl(from var(--_text-color) h s calc(l * 0.5));
 
     /* use z-index: 4 to cover .crop-tool and canvas elements in shadow DOM (they must use z-index: 2 or something) */
     z-index: 4;
@@ -265,7 +275,7 @@ button.icon-wrapper:has(i, div + span):active:hover {
     & .timeline > *:nth-child(5n) {
         position: relative;
         height: calc(var(--_timeline-std-height) * 1.5);
-        border-right: 2px solid var(--_tl-color-medium);
+        border-right: 2px solid var(--_text-color);
     }
 
     & .timeline > *:nth-child(5n)::before {
@@ -275,7 +285,7 @@ button.icon-wrapper:has(i, div + span):active:hover {
         right: 0;
         transform: translate(50%, -100%);
         line-height: 1;
-        color: var(--_tl-color-heavy);
+        color: var(--_text-color);
     }
 }
 
@@ -292,7 +302,7 @@ button.icon-wrapper:has(i, div + span):active:hover {
     & .track {
         flex-shrink: 0;
         height: var(--_track-height);
-        background: hsl(from var(--_bg-color) h s calc(l * 0.8));
+        background: hsl(from var(--_bg-color) h s calc(l * 1.5));
     }
 }
 
@@ -365,7 +375,7 @@ button.icon-wrapper:has(i, div + span):active:hover {
     & .crop-tool {
         --_bar-width: 30px;
         --_border-width: calc(var(--_bar-width) / 6);
-        --_crop-color: yellow;
+        --_crop-color: #ffd2a7;
 
         --_top: var(--_border-width);
         --_bottom: calc(var(--_track-height) - var(--_border-width));
@@ -468,6 +478,10 @@ button.icon-wrapper:has(i, div + span):active:hover {
         /* i have no idea why bottom: 0 isn't working */
         top: var(--_bottom);
         /* top: revert; */
+    }
+
+    & button.icon-wrapper > i.icon {
+        --_icon-color: var(--_bg-color);
     }
 }
 
