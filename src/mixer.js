@@ -279,6 +279,7 @@ export default class Mixer {
         this.#time_controls.classList.add("time-controls");
         this.#time_controls.min = 0;
         this.#time_controls.max = 100;
+        this.#time_controls.value = 0;
 
         controls.appendChild(this.#time_controls);
 
@@ -424,6 +425,12 @@ export default class Mixer {
         this.#slider.style.height = `${this.#track_list.getBoundingClientRect().height + this.#timeline.getBoundingClientRect().height}px`;
 
         return data;
+    }
+
+    reset() {
+        for (const [k, v] of this.#audio_map) {
+            this.delete_track(k);
+        }
     }
 
     export_tracks() {

@@ -18,6 +18,10 @@ document.getElementById("delete").addEventListener("click", () => {
     console.log(data);
 });
 
+document.getElementById("reset").addEventListener("click", () => {
+    mixer.reset();
+});
+
 let audio_ids = [];
 
 
