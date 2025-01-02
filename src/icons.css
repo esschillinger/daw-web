@@ -1,0 +1,100 @@
+.icon-wrapper {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.8rem;
+    border-radius: 1rem;
+    font-family: inherit;
+    transition: background-color 150ms ease,
+                transform 150ms ease;
+}
+
+button.icon-wrapper {
+    cursor: pointer;
+    border: none;
+    background: none;
+}
+
+button.icon-wrapper::before {
+    content: '';
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    border-radius: inherit;
+    transition: 150ms ease;
+}
+
+button.icon-wrapper:hover::before {
+    background-color: rgb(from var(--_color-text, black) r g b / 0.05);
+}
+
+button.icon-wrapper:active:hover {
+    transform: scale(0.95);
+}
+
+button.icon-wrapper:has(i, div + span):active:hover {
+    transform: scale(0.98);
+}
+
+.icon-wrapper > .icon {
+    width: 1rem;
+    height: 1rem;
+    padding: 0;
+    cursor: inherit;
+}
+
+.icon-wrapper > i.icon {
+    --_icon-color: var(--color-text, black);
+
+    mask-repeat: no-repeat;
+    mask-position: center;
+    border-color: transparent;
+    background-color: var(--_icon-color);
+    transition: background-color 250ms ease;
+}
+
+.icon-wrapper > span.icon__description {
+    font-size: 0.9rem;
+}
+
+/* thanks fontawesome */
+
+.icon__gear {
+    mask-image: url("./icons/gear-solid.svg");
+}
+
+.icon__play {
+    mask-image: url("./icons/play-solid.svg");
+}
+
+.icon__pause {
+    mask-image: url("./icons/pause-solid.svg");
+}
+
+.icon__check {
+    mask-image: url("./icons/check-solid.svg");
+}
+
+.icon__xmark {
+    mask-image: url("./icons/xmark-solid.svg");
+}
+
+.icon__zoom-in {
+    mask-image: url("./icons/magnifying-glass-plus-solid.svg");
+}
+
+.icon__zoom-out {
+    mask-image: url("./icons/magnifying-glass-minus-solid.svg");
+}
+
+.icon__left-chevron {
+    mask-image: url("./icons/chevron-left-solid.svg");
+}
+
+.icon__right-chevron {
+    mask-image: url("./icons/chevron-right-solid.svg");
+}

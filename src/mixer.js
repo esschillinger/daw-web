@@ -428,6 +428,11 @@ export default class Mixer {
     }
 
     reset() {
+        this.#demo_playing = false;
+        this.#time_controls.value = 0;
+        this.#audio_counter = 0;
+        this.#play_button.firstChild.classList.remove("icon__pause");
+
         for (const [k, v] of this.#audio_map) {
             this.delete_track(k);
         }
