@@ -143,7 +143,7 @@ export default class Mixer {
 
 
         this.#phantom_audio = document.createElement("audio");
-        this.#phantom_audio.src = "./audio/20Hz-tone.webm"; // 20Hz tone to keep audio drivers awake during playback, fix sync issues
+        this.#phantom_audio.src = this.#attributes.phantomAudioPath; // 20Hz tone to keep audio drivers awake during playback, fix sync issues
         this.#phantom_audio.id = "phantom-audio";
         this.#phantom_audio.loop = true;
         this.#phantom_audio.volume = 0.01;

@@ -2,7 +2,8 @@ import Mixer from "/src/mixer.js"
 
 
 const mixer = new Mixer({
-    container: ".test-container"
+    container: ".test-container",
+    phantomAudioPath: "./audio/20Hz-tone.webm"
 });
 
 document.getElementById("export").addEventListener("click", () => {
