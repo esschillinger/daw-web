@@ -139,7 +139,7 @@ export default class Mixer {
         this.#audio_controls.appendChild(control);
 
 
-        this.#mixer.appendChild(this.#audio_controls);
+        container.appendChild(this.#audio_controls);
 
 
         this.#phantom_audio = document.createElement("audio");
@@ -825,8 +825,23 @@ export default class Mixer {
                 // TODO try to place #audio-controls to the bottom and right of the cursor, adjust based on size
     
                 // for now, just stick it to the bottom and right (it's late, i'm tired)
-                this.#audio_controls.style.left = `${e.clientX + 20}px`;
-                this.#audio_controls.style.top = `${e.clientY + 20}px`;
+                const containing_block = this.#audio_controls.offsetParent;
+                let controls_left;
+                let controls_top;
+                
+                if (containing_block === null) {
+                    controls_left = e.clientX + 20;
+                    controls_top = e.clientY + 20;
+
+                } else {
+                    const containing_rect = containing_block.getBoundingClientRect();
+
+                    controls_left = e.clientX - containing_rect.left + 20;
+                    controls_top = e.clientY - containing_rect.top + 20;
+                }
+
+                this.#audio_controls.style.left = `${controls_left}px`;
+                this.#audio_controls.style.top = `${controls_top}px`;
     
                 // show controls
                 this.#audio_controls.dataset.state = "";
