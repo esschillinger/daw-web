@@ -302,7 +302,7 @@ export default class Mixer {
         audio_wrapper.classList.add("audio-wrapper");
         audio_wrapper.style.setProperty("--_color", audio_settings.color);
         audio_wrapper.dataset.id = this.#audio_counter++;
-        audio_wrapper.dataset.file = audio_settings.file; // perhaps audio_settings.file.split("/")[-1] to isolate file name
+        audio_wrapper.dataset.file = audio_settings.title ? audio_settings.title : audio_settings.file; // perhaps audio_settings.file.split("/")[-1] to isolate file name
         audio_wrapper.classContext = this;
 
         const crop_tool = document.createElement("div");
