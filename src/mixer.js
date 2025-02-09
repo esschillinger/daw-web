@@ -436,6 +436,9 @@ export default class Mixer {
         for (const [k, v] of this.#audio_map) {
             this.delete_track(k);
         }
+
+        this.#scroll_container.scrollLeft = 0;
+        this.#slider.style.left = "0px";
     }
 
     export_tracks() {
